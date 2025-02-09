@@ -88,4 +88,19 @@ class SellerTest extends TestCase
             'email' => 'doejohn@email.com',
         ]);
     }
+
+    public function test_update_seller_with_invalid_data(): void
+    {
+        $seller = Seller::factory()->create();
+
+        $response = $this->putJson("/api/sellers/{$seller->id}", [
+            'name' => 'Jane Doe',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonStructure([
+            'message',
+            'errors',
+        ]);
+    }
 }
