@@ -10,4 +10,5 @@ Route::get('/', function () {
 Route::group(['prefix' => 'api'], function () {
     Route::post('/sellers', [SellerController::class, 'store']);
     Route::put('/sellers/{seller}', [SellerController::class, 'update']);
+    Route::get('/sellers/{seller}', [SellerController::class, 'show']);
 });

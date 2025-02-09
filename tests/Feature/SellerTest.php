@@ -103,4 +103,20 @@ class SellerTest extends TestCase
             'errors',
         ]);
     }
+
+    public function test_show_seller(): void
+    {
+        $seller = Seller::factory()->create();
+
+        $response = $this->get("/api/sellers/{$seller->id}");
+
+        $response->assertStatus(200);
+        $response->assertJsonStructure([
+            'id',
+            'name',
+            'email',
+            'created_at',
+            'updated_at',
+        ]);
+    }
 }

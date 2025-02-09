@@ -18,4 +18,9 @@ class SellerService implements SellerServiceInterface
 
         return $seller;
     }
+
+    public function show(int $id): Seller
+    {
+        return Seller::findOrFail($id);
+    }
 }

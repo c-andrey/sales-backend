@@ -37,4 +37,13 @@ class SellerController extends Controller
 
         return response()->json($seller, 200);
     }
+
+    public function show()
+    {
+        $id = request('seller');
+
+        $seller = $this->sellerService->show($id);
+
+        return response()->json($seller, 200);
+    }
 }
