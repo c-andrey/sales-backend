@@ -8,6 +8,7 @@ use Tests\TestCase;
 
 class SellerTest extends TestCase
 {
+    use RefreshDatabase;
     /**
      * A basic feature test example.
      */
@@ -32,6 +33,19 @@ class SellerTest extends TestCase
             'email',
             'created_at',
             'updated_at',
+        ]);
+    }
+
+    public function test_create_seller_with_invalid_data(): void
+    {
+        $response = $this->postJson('/api/sellers', [
+            'name' => 'John Doe',
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonStructure([
+            'message',
+            'errors',
         ]);
     }
 }
