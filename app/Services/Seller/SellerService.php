@@ -10,4 +10,12 @@ class SellerService implements SellerServiceInterface
     {
         return Seller::create($data);
     }
+
+    public function update(int $id, array $data): Seller
+    {
+        $seller = Seller::findOrFail($id);
+        $seller->update($data);
+
+        return $seller;
+    }
 }

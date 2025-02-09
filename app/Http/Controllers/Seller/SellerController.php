@@ -23,4 +23,18 @@ class SellerController extends Controller
 
         return response()->json($seller, 201);
     }
+
+    public function update()
+    {
+        $data = request()->validate([
+            'name' => 'required|string',
+            'email' => 'required|email'
+        ]);
+
+        $id = request('seller');
+
+        $seller = $this->sellerService->update($id, $data);
+
+        return response()->json($seller, 200);
+    }
 }
