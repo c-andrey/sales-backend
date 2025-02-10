@@ -6,18 +6,23 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Seller extends Model
+class Sale extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['name', 'email'];
-    protected $casts = [
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime'
+    protected $fillable = [
+        'seller_id',
+        'value',
+        'comission',
+        'sale_date'
     ];
 
-    public function sales()
+    protected $casts = [
+        'sale_date' => 'datetime'
+    ];
+
+    public function seller()
     {
-        return $this->hasMany(Sale::class);
+        return $this->belongsTo(Seller::class);
     }
 }
