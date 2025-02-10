@@ -21,9 +21,9 @@ services:
       DB_CONNECTION: mysql
       DB_HOST: db
       DB_PORT: 3306
-      DB_DATABASE: db
-      DB_USERNAME: user
-      DB_PASSWORD: secret
+      DB_DATABASE: sales_manager
+      DB_USERNAME: root
+      DB_PASSWORD: root
       CACHE_DRIVER: redis
       QUEUE_CONNECTION: redis
       REDIS_HOST: redis
@@ -35,7 +35,7 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: db
+      MYSQL_DATABASE: sales_manager
       MYSQL_USER: user
       MYSQL_PASSWORD: secret
     ports:
