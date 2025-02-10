@@ -119,4 +119,54 @@ class SellerTest extends TestCase
             'updated_at',
         ]);
     }
+
+    public function test_show_seller_not_found(): void
+    {
+        $response = $this->get("/api/sellers/1");
+
+        $response->assertStatus(404);
+        $response->assertJsonStructure([
+            'message',
+        ]);
+    }
+
+    public function test_list_all_sellers(): void
+    {
+        Seller::factory()->count(5)->create();
+
+        $response = $this->get("/api/sellers");
+
+        $response->assertStatus(200);
+        $response->assertJsonCount(5);
+    }
+
+    public function test_list_all_sellers_empty(): void
+    {
+        $response = $this->get("/api/sellers");
+
+        $response->assertStatus(200);
+        $response->assertJsonCount(0);
+    }
+
+    public function test_delete_seller(): void
+    {
+        $seller = Seller::factory()->create();
+
+        $response = $this->delete("/api/sellers/{$seller->id}");
+
+        $response->assertStatus(204);
+        $this->assertSoftDeleted('sellers', [
+            'id' => $seller->id,
+        ]);
+    }
+
+    public function test_delete_seller_not_found(): void
+    {
+        $response = $this->delete("/api/sellers/1");
+
+        $response->assertStatus(404);
+        $response->assertJsonStructure([
+            'message',
+        ]);
+    }
 }

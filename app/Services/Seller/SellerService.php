@@ -19,8 +19,28 @@ class SellerService implements SellerServiceInterface
         return $seller;
     }
 
-    public function show(int $id): Seller
+    public function show(int $id): ?Seller
     {
-        return Seller::findOrFail($id);
+        $seller = Seller::find($id);
+
+        if (!$seller) {
+            throw new \Exception('Seller not found', 404);
+        }
+
+        return $seller;
+    }
+
+    public function index(): array
+    {
+        return Seller::all()->toArray();
+    }
+
+    public function delete(int $id): void
+    {
+        $response = Seller::destroy($id);
+
+        if (!$response) {
+            throw new \Exception('Seller not found', 404);
+        }
     }
 }

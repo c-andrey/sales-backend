@@ -35,8 +35,8 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: laravel_db
-      MYSQL_USER: laravel_user
+      MYSQL_DATABASE: db
+      MYSQL_USER: user
       MYSQL_PASSWORD: secret
     ports:
       - "3307:3306"
