@@ -16,6 +16,10 @@ class SaleTest extends TestCase
 
     use RefreshDatabase;
 
+    private const HEADERS = [
+        'Accept' => 'application/json'
+    ];
+
     public function test_example(): void
     {
         $response = $this->get('/');
@@ -30,7 +34,7 @@ class SaleTest extends TestCase
         $response = $this->post('/api/sales', [
             'seller_id' => $seller->id,
             'value' => 100
-        ]);
+        ], self::HEADERS);
 
         $response->assertStatus(201);
     }
@@ -42,7 +46,7 @@ class SaleTest extends TestCase
         $response = $this->post('/api/sales', [
             'seller_id' => $seller->id,
             'value' => 100
-        ]);
+        ], self::HEADERS);
 
         $response->assertStatus(201);
 
@@ -58,9 +62,7 @@ class SaleTest extends TestCase
         $response = $this->post('/api/sales', [
             'seller_id' => $seller->id,
             'value' => 'invalid'
-        ], [
-            'Accept' => 'application/json'
-        ]);
+        ], self::HEADERS);
 
         $response->assertStatus(422);
     }
@@ -68,7 +70,7 @@ class SaleTest extends TestCase
     public function test_get_sales(): void
     {
         Sale::factory(5)->create();
-        $response = $this->get('/api/sales');
+        $response = $this->get('/api/sales', self::HEADERS);
 
         $response->assertStatus(200);
         $response->assertJsonCount(5);
@@ -77,11 +79,49 @@ class SaleTest extends TestCase
     public function test_get_sale(): void
     {
         $sale = Sale::factory()->create();
-        $response = $this->get("/api/sales/{$sale->id}");
+        $response = $this->get("/api/sales/{$sale->id}", self::HEADERS);
 
         $response->assertStatus(200);
         $response->assertJsonFragment([
             'id' => $sale->id
         ]);
+    }
+
+    public function test_update_sale(): void
+    {
+        $sale = Sale::factory()->create();
+        $response = $this->put("/api/sales/{$sale->id}", [
+            'value' => 200
+        ], self::HEADERS);
+
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            'value' => 200,
+            'comission' => 17
+        ]);
+    }
+
+    public function test_update_sale_not_found(): void
+    {
+        $response = $this->put("/api/sales/1", [
+            'value' => 200
+        ], self::HEADERS);
+
+        $response->assertStatus(404);
+    }
+
+    public function test_delete_sale(): void
+    {
+        $sale = Sale::factory()->create();
+        $response = $this->delete("/api/sales/{$sale->id}", [], self::HEADERS);
+
+        $response->assertStatus(204);
+    }
+
+    public function test_delete_sale_not_found(): void
+    {
+        $response = $this->delete("/api/sales/1", [], self::HEADERS);
+
+        $response->assertStatus(404);
     }
 }

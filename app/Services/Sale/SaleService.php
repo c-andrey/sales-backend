@@ -2,8 +2,8 @@
 
 namespace App\Services\Sale;
 
+use App\Exceptions\HttpException;
 use App\Models\Sale;
-use Illuminate\Support\Facades\Log;
 
 class SaleService implements SaleServiceInterface
 {
@@ -15,19 +15,37 @@ class SaleService implements SaleServiceInterface
 
     public function update(int $id, array $data): Sale
     {
-        $sale = Sale::findOrFail($data);
+        $sale = Sale::find($id);
+
+        if (!$sale) {
+            throw new HttpException('Sale not found', 404);
+        }
+
+        $data['comission'] = $data['value'] * 0.085;
         $sale->update($data);
         return $sale;
     }
 
     public function delete(int $id): void
     {
-        Sale::destroy($id);
+        $sale = Sale::find($id);
+
+        if (!$sale) {
+            throw new HttpException('Sale not found', 404);
+        }
+
+        $sale->delete();
     }
 
     public function get(int $id): Sale
     {
-        return Sale::findOrFail($id);
+        $sale = Sale::find($id);
+
+        if (!$sale) {
+            throw new HttpException('Sale not found', 404);
+        }
+
+        return $sale;
     }
 
     public function all(): array

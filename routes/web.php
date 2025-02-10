@@ -15,6 +15,7 @@ Route::group(['prefix' => 'api'], function () {
         Route::get('/{seller}', [SellerController::class, 'show']);
         Route::put('/{seller}', [SellerController::class, 'update']);
         Route::delete('/{seller}', [SellerController::class, 'destroy']);
+        Route::get('/{seller_id}/sales', [SellerController::class, 'sales']);
     });
 
     Route::group(['prefix' => 'sales'], function () {
