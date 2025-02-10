@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Seller;
 
+use App\Exceptions\HttpException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Seller\RetrieveSalesRequest;
 use App\Services\Seller\SellerServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -71,6 +73,21 @@ class SellerController extends Controller
         } catch (\Throwable $th) {
             Log::error($th->getMessage());
             return response()->json(['message' => $th->getMessage()], $th->getCode());
+        }
+    }
+
+    public function sales(int $seller)
+    {
+        try {
+            $sales = $this->sellerService->retrieveSalesBySeller($seller);
+
+            return response()->json($sales, 200);
+        } catch (HttpException $th) {
+            Log::error($th->getMessage());
+            return response()->json(['message' => $th->getMessage()], $th->getCode());
+        } catch (\Throwable $th) {
+            Log::error($th->getMessage());
+            return response()->json(['message' => $th->getMessage()], 500);
         }
     }
 }

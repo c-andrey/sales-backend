@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Sale;
 use App\Models\Seller;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -167,6 +168,46 @@ class SellerTest extends TestCase
         $response->assertStatus(404);
         $response->assertJsonStructure([
             'message',
+        ]);
+    }
+
+    public function test_get_all_sellers_with_comission_combined(): void
+    {
+        $sellers = Seller::factory()->count(5)->create();
+
+        $sellers->each(function ($seller) {
+            Sale::factory()->count(5)->withSeller($seller->id)->create();
+        });
+
+        $response = $this->get("/api/sellers");
+
+        $response->assertStatus(200);
+        $response->assertJsonCount(30);
+        $response->assertJsonStructure([
+            '*' => [
+                'id',
+                'name',
+                'email',
+                'comission',
+            ],
+        ]);
+    }
+
+    public function test_list_all_sales_from_a_seller(): void
+    {
+        $seller = Seller::factory()->create();
+        Sale::factory()->count(5)->withSeller($seller->id)->create();
+
+        $response = $this->get("/api/sellers/{$seller->id}/sales");
+
+        $response->assertStatus(200);
+        $response->assertJsonCount(5);
+        $response->assertJsonStructure([
+            '*' => [
+                'id',
+                'value',
+                'comission',
+            ],
         ]);
     }
 }

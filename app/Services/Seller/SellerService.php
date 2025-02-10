@@ -2,7 +2,10 @@
 
 namespace App\Services\Seller;
 
+use App\Exceptions\HttpException;
 use App\Models\Seller;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Log;
 
 class SellerService implements SellerServiceInterface
 {
@@ -24,15 +27,16 @@ class SellerService implements SellerServiceInterface
         $seller = Seller::find($id);
 
         if (!$seller) {
-            throw new \Exception('Seller not found', 404);
+            throw new HttpException('Seller not found', 404);
         }
 
         return $seller;
     }
 
-    public function index(): array
+    public function index(): Collection
     {
-        return Seller::all()->toArray();
+        $sellers = Seller::all();
+        return $sellers;
     }
 
     public function delete(int $id): void
@@ -40,7 +44,18 @@ class SellerService implements SellerServiceInterface
         $response = Seller::destroy($id);
 
         if (!$response) {
-            throw new \Exception('Seller not found', 404);
+            throw new HttpException('Seller not found', 404);
         }
+    }
+
+    public function retrieveSalesBySeller(int $sellerId): Collection
+    {
+        $seller = Seller::find($sellerId);
+
+        if (!$seller) {
+            throw new HttpException('Seller not found', 404);
+        }
+
+        return $seller->sales;
     }
 }
