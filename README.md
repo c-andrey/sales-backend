@@ -35,10 +35,6 @@ backend/
 ## ⚙️ Configuração e Instalação
 
 ### 1️⃣ Clonar o repositório
-```sh
-git clone https://github.com/seu-usuario/backend.git
-cd backend
-```
 
 ### 2️⃣ Configurar o ambiente
 Copie o arquivo `.env.example` para `.env` e edite conforme necessário.
